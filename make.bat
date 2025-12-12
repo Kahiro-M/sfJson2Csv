@@ -1,0 +1,1 @@
+pyinstaller --onefile --icon=icon.ico sfJson2Csv.py -n sfJson2Csv
