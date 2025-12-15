@@ -1,5 +1,6 @@
 import json
 import csv
+import sys
 
 # ---------- ユーティリティ ----------
 def normalize(s: str) -> str:
@@ -9,6 +10,26 @@ def normalize(s: str) -> str:
 REPORT_JSON = "report.json"
 HEADER_CSV = "output_header.csv"
 OUTPUT_CSV = "output.csv"
+
+if len(sys.argv)==1:
+    REPORT_JSON = "report.json"
+    HEADER_CSV = "output_header.csv"
+    OUTPUT_CSV = "output.csv"
+elif len(sys.argv)==2:
+    REPORT_JSON = sys.argv[1]
+elif len(sys.argv)==3:
+    REPORT_JSON = sys.argv[1]
+    HEADER_CSV = sys.argv[2]
+elif len(sys.argv)==4:
+    REPORT_JSON = sys.argv[1]
+    HEADER_CSV = sys.argv[2]
+    OUTPUT_CSV = sys.argv[3]
+else:
+    print("Usage: python sfJson2Csv.py [report.json] [header.csv] [output.csv]")
+    print("  [report.json] : Salesforce レポートの JSON エクスポートファイル（省略時: report.json）")
+    print("  [header.csv]  : 出力する列ラベルを1行目に持つ CSV ファイル（省略時: output_header.csv）")
+    print("  [output.csv]  : 出力 CSV ファイル名（省略時: output.csv）")
+    sys.exit(1)
 
 # 1. JSON 読み込み
 with open(REPORT_JSON, encoding="utf-8") as f:
@@ -27,7 +48,6 @@ column_index = {}
 for i, key in enumerate(detail_columns):
     label = normalize(detail_info[key]["label"])
     column_index[label] = i
-
 # 4. 出力対象 index を header から解決
 target_indexes = []
 for label in header_labels:
